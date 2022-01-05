@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Item Details</title>
+</head>
+<body>
+<script>
+    function makeEditable(id){
+        document.getElementById(id).children[3].children[0].style.display='none'
+        document.getElementById(id).children[3].children[1].style.display='block'
+    }
+
+</script>
+<form action="/add_item" method="post">
+    <p>Adding item <label>
+    <input type="text" name="Description" value=" "/>
+    </label>
+    <input type="submit" value="add"/></p>
+
+</form>
+
+<table border="1">
+    <tr>
+        <td>Item ID</td>
+        <td>Description</td>
+        <td>Last Modified time</td>
+    </tr>
+    {% for item in body %}
+    <tr id="{{ item.id }}">
+        <td>{{ item.id }}</td>
+        <td>{{ item.description }}</td>
+        <td>{{ item.create_time }}</td>
+        <td>
+            <button onclick="makeEditable('{{ item.id }}')">edit</button>
+            <form style="display: none" action="/update_item" method="post">
+                <input type="hidden" value="{{ item.id }}" name="item_id" >
+                <input type="text" name="Description" value=" "/>
+                <input type="submit" value="update">
+            </form>
+        </td>
+        <td>
+            <form action="/delete_item" method="GET">
+                <input type="hidden" value="{{ item.id }}" name="item_id">
+                <input type="submit" value="delete">
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+</body>
+</html>

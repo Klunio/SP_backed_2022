@@ -41,7 +41,7 @@ class database:
                     id=i.id,
                     description=i.description,
                     create_time=i.create_time
-                ) for i in result.all()]
+                ).dict() for i in result.all()]
 
     async def delete_item(self, id) -> None:
         async with self.async_session() as session:

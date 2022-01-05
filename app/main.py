@@ -4,7 +4,7 @@
 from typing import Union
 
 from fastapi import FastAPI, Request, Form
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, FileResponse
 from fastapi.templating import Jinja2Templates
 from loguru import logger
 from starlette import status
@@ -65,3 +65,13 @@ async def update_item(*, item_id: int = Form(...), Description: str = Form(...))
 
     return RedirectResponse(url="/",
                             status_code=status.HTTP_302_FOUND)
+
+import pandas as pd
+import tempfile
+
+@app.get("/download")
+async def download():
+    data = await db.get_all()
+    file_path = f'/tmp/{next(tempfile._get_candidate_names())}.csv'
+    pd.DataFrame(data).to_csv(file_path)
+    return FileResponse(file_path)
